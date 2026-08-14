@@ -1,0 +1,13 @@
+# eclipse ide files
+.settings/
+.classpath
+.project
+*.launch
+
+#build
+/build/
+/target
+/*.class
+/.metadata/
+/wtpwebapps/
+*.log
