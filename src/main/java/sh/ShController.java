@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@WebServlet("*/do")
+@WebServlet("*.do")
 public class ShController extends HttpServlet {
 	
 	
