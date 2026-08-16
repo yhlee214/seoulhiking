@@ -1,6 +1,6 @@
 package sh;
 
-public class Review {
+public class ReviewTO {
 
 	int rvNumid;  
 	String rvTitle;
@@ -8,7 +8,8 @@ public class Review {
 	String rvNickid;
 	String rvPwd;
 	String rvImg;
-    int mtId;
+	int mtId;
+    String mtName;
     
 	public int getRvNumid() {
 		return rvNumid;
@@ -51,6 +52,12 @@ public class Review {
 	}
 	public void setMtId(int mtId) {
 		this.mtId = mtId;
+	}
+	public String getMtName() {
+		return mtName;
+	}
+	public void setMtName(String mtName) {
+		this.mtName = mtName;
 	}	
     
 }
