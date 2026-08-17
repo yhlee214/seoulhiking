@@ -4,10 +4,13 @@
 .project
 *.launch
 
-#build
-/build/
-/target
-/*.class
-/.metadata/
-/wtpwebapps/
+# build
+build/
+target/
+bin/
+*.class
+
+# server
+.metadata/
+wtpwebapps/
 *.log
