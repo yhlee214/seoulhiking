@@ -1,67 +1,142 @@
 package sh;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 
 @WebServlet("*.do")
 public class ShController extends HttpServlet {
-	
-	
+
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		// ※ 한글 깨지면 여기에 req.setCharacterEncoding("UTF-8");
+		//    모달 저장은 POST로 나가므로 여기서 걸릴 확률 높음
+		
 		String page = "menu.jsp";
-		String uri = req.getRequestURI(); //http://localhost:8080/empapp/list.do
-		String requestUri = uri.substring(uri.lastIndexOf("/"), uri.length());
+		String uri = req.getRequestURI();
+		String requestUri = uri.substring(uri.lastIndexOf("/"));
 
 	switch (requestUri) {
+	
+		// ═══ Ajax 응답 구간 (Controller가 직접 JSON, View 안 거침) ═══
+	
+		// 등록 — 모달 저장 버튼
 		case "/insert.do" : {
-			Review rv = makeReview(req);
+			ReviewTO rv = makeReview(req);
+			int result = ShDAO.insertReview(rv);
+			writeJson(resp, "{\"result\":" + result + "}");
+			return;   // ★ forward 타면 JSON 뒤에 HTML 붙어서 파싱 깨짐
 		}
+		
+		// 수정 — 모달 저장 버튼
 		case "/edit.do" : {
-			Review rv = makeReview(req);
+			ReviewTO rv = makeReview(req);
+			// makeReview는 rvNumid를 안 담음(등록엔 없는 값이라)
+			// update는 대상 글번호가 필수 → 모달의 hidden input에서 받아 세팅
+			rv.setRvNumid(Integer.parseInt(req.getParameter("rvNumid")));
+			int result = ShDAO.updateReview(rv);
+			writeJson(resp, "{\"result\":" + result + "}");
+			return;
 		}
 		
+		// 삭제
 		case "/delete.do" : {
-			Review rv = makeReview(req);
+			int rvId = Integer.parseInt(req.getParameter("rvNumid"));
+			int result = ShDAO.deleteReview(rvId);
+			writeJson(resp, "{\"result\":" + result + "}");
+			return;
 		}
 		
-		case "/reviewlist.do " : {
-			Review rv = makeReview(req);
+		// 한 건 조회 — 수정 모달 열기 전 기존 값 받아가는 용도
+		// jQuery가 이 값을 $('#rvTitle').val(data.rvTitle) 로 채운 뒤 modal('show')
+		case "/reviewone.do" : {
+			int rvId = Integer.parseInt(req.getParameter("rvNumid"));
+			ReviewTO rv = ShDAO.getReviewById(rvId);
 			
+			// rvPwd는 화면에 내려보내지 않음
+			String json = "{"
+					+ "\"rvNumid\":"  + rv.getRvNumid() + ","
+					+ "\"rvTitle\":\""   + esc(rv.getRvTitle())   + "\","
+					+ "\"rvContent\":\"" + esc(rv.getRvContent()) + "\","
+					+ "\"rvNickid\":\""  + esc(rv.getRvNickid())  + "\","
+					+ "\"rvImg\":\""     + esc(rv.getRvImg())     + "\","
+					+ "\"mtId\":"     + rv.getMtId()
+					+ "}";
+			writeJson(resp, json);
+			return;
 		}
 		
+		
+		// ═══ View(JSP) 거치는 구간 ═══
+		
+		// 리뷰 목록 — 페이지 전체 (모달 마크업도 이 JSP 안에 포함)
+		case "/reviewlist.do" : {
+			List<ReviewTO> list = ShDAO.getReviewList();
+			req.setAttribute("reviewlist", list);
+			page = "review.jsp";
+			break;
+		}
+		
+		// 리뷰 목록 — 표 부분만 (Ajax 요청이지만 응답은 HTML 조각)
+		// reviewTable.jsp 에는 <c:forEach>로 <tr>만 반복. html/head/body 없음
+		// 저장 성공 후 $('#reviewBody').load('reviewtable.do') 로 갈아끼움
+		case "/reviewtable.do" : {
+			List<ReviewTO> list = ShDAO.getReviewList();
+			req.setAttribute("reviewlist", list);
+			page = "reviewTable.jsp";
+			break;
+		}
+		
+		// 산 목록
 		case "/mtlist.do" : {
-			MountainTO mt = makeMountain(req);
+			String lang = req.getParameter("lang");
+			List<MountainTO> list = ShDAO.getMountainList(lang);
+			req.setAttribute("mtList", list);
+			page = "mtinfo.jsp";
+			break;
 		}
 	}
+	
+	RequestDispatcher rd = req.getRequestDispatcher(page);
+	rd.forward(req, resp);
 	}
 
-	private Review makeReview(HttpServletRequest req) {
-		Review rv = new Review();
-		rv.setRvNumid(Integer.parseInt(req.getParameter("rvNumid")));
-		rv.setRvTitle(req.getParameter("rvContent"));
+	
+	// JSON 응답 공통 처리
+	private void writeJson(HttpServletResponse resp, String json) throws IOException {
+		resp.setContentType("application/json; charset=UTF-8");
+		PrintWriter out = resp.getWriter();
+		out.print(json);
+		out.flush();
+	}
+	
+	// 리뷰 내용에 " 나 줄바꿈이 들어가면 JSON 문법이 깨짐 → 이스케이프 처리
+	private String esc(String s) {
+		if (s == null) return "";
+		return s.replace("\\", "\\\\")
+		        .replace("\"", "\\\"")
+		        .replace("\r", "")
+		        .replace("\n", "\\n");
+	}
+	
+	private ReviewTO makeReview(HttpServletRequest req) {
+		ReviewTO rv = new ReviewTO();
+		rv.setRvTitle(req.getParameter("rvTitle"));
+		rv.setRvContent(req.getParameter("rvContent"));
 		rv.setRvNickid(req.getParameter("rvNickid"));
 		rv.setRvPwd(req.getParameter("rvPwd"));
 		rv.setRvImg(req.getParameter("rvImg"));
 		rv.setMtId(Integer.parseInt(req.getParameter("mtId")));
+		rv.setMtName(req.getParameter("mtName"));
 		return rv;
-
 	}
 	
-	private MountainTO makeMountain(HttpServletRequest req) {
-		MountainTO mt =  new MountainTO();
-		mt.setMtId(Integer.parseInt(req.getParameter("mtId")));
-		mt.setMtName(req.getParameter("mtName"));
-		mt.setMtLocation(req.getParameter("mtLocation"));
-		mt.setMtHeight(Integer.parseInt(req.getParameter("mtHeight")));
-		mt.setMtTrail(req.getParameter("mtTrail"));
-		
-		return mt;
-
-	}
 }
