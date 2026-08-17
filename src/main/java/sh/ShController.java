@@ -79,10 +79,13 @@ public class ShController extends HttpServlet {
 		
 		// 리뷰 목록 — 페이지 전체 (모달 마크업도 이 JSP 안에 포함)
 		case "/reviewlist.do" : {
-			List<ReviewTO> list = ShDAO.getReviewList();
-			req.setAttribute("reviewlist", list);
-			page = "review.jsp";
-			break;
+		    List<ReviewTO> list = ShDAO.getReviewList();
+		    req.setAttribute("reviewlist", list);
+		    List<MountainTO> mtList = ShDAO.getMountainList(req.getParameter("lang"));
+		    req.setAttribute("mtList", mtList);
+
+		    page = "review.jsp";
+		    break;
 		}
 		
 		// 리뷰 목록 — 표 부분만 (Ajax 요청이지만 응답은 HTML 조각)
