@@ -12,11 +12,12 @@ public class ShDAO {
 	public static List<MountainTO> getMountainList(String lang) {
 		List<MountainTO> mtList = new ArrayList<MountainTO>();
 		String sql = "";
-		if("eng".equals(lang)) {
-			sql = "select mt_id, mt_name_en as mt_name, mt_location_en as mt_location,"
-					+ " mt_height, mt_trail_en as mt_trail from mountain";
+		if ("eng".equals(lang)) {
+			sql = "select mt_id, mt_name_en as mt_name, mt_content_en as mt_content, mt_location_en as mt_location,\r\n"
+					+ "	mt_height, mt_trail_img from mountain";
 		} else {
-			sql = "select * from mountain";
+			sql = "select mt_id, mt_name, mt_content, mt_location, mt_height, mt_trail_img\r\n"
+					+ "	from mountain";
 		}
 
 		try (Connection conn = DBUtil.getConnection()) {
@@ -29,10 +30,11 @@ public class ShDAO {
 				MountainTO mt = new MountainTO();
 				mt.setMtId(rs.getInt("mt_id"));
 				mt.setMtName(rs.getString("mt_name"));
+				mt.setMtContent(rs.getString("mt_content"));
 				mt.setMtLocation(rs.getString("mt_location"));
 				mt.setMtHeight(rs.getInt("mt_height"));
-				mt.setMtTrail(rs.getString("mt_trail"));
-				
+				mt.setMtTrailImg(rs.getString("mt_trail_img"));
+
 				mtList.add(mt);
 			}
 
@@ -47,7 +49,7 @@ public class ShDAO {
 	public static List<ReviewTO> getReviewList() {
 		List<ReviewTO> rvList = new ArrayList<ReviewTO>();
 		String sql = "select r.rv_numid as rv_numid, r.rv_title as rv_title, r.rv_content as rv_content, r.rv_img as rv_img"
-				+ ", r.rv_nickid as rv_nickid, m.mt_name as mt_name\r\n"
+				+ ", r.rv_nickid as rv_nickid, m.mt_name as mt_name, m.mt_name_en as mt_name_en\r\n"
 				+ "	from review r join mountain m on r.mt_id = m.mt_id";
 		try (Connection conn = DBUtil.getConnection()) {
 
@@ -63,6 +65,7 @@ public class ShDAO {
 				rv.setRvImg(rs.getString("rv_img"));
 				rv.setRvNickid(rs.getString("rv_nickid"));
 				rv.setMtName(rs.getString("mt_name"));
+				rv.setMtNameEn(rs.getString("mt_name_en"));
 				rvList.add(rv);
 			}
 
@@ -98,18 +101,19 @@ public class ShDAO {
 		return result;
 
 	}
+
 	public static ReviewTO getReviewById(int rvNumId) {
 		ReviewTO rv = new ReviewTO();
-		String sql = "select * from review where rv_numid = ?";		
-		
-		try(Connection conn = DBUtil.getConnection()) {
-			
+		String sql = "select * from review where rv_numid = ?";
+
+		try (Connection conn = DBUtil.getConnection()) {
+
 			PreparedStatement psmt = conn.prepareStatement(sql);
 			psmt.setInt(1, rvNumId);
-			
+
 			ResultSet rs = psmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				rv.setRvNumid(rs.getInt("rv_numId"));
 				rv.setRvTitle(rs.getString("rv_title"));
 				rv.setRvContent(rs.getString("rv_content"));
@@ -117,56 +121,56 @@ public class ShDAO {
 				rv.setRvPwd(rs.getString("rv_pwd"));
 				rv.setRvImg(rs.getString("rv_img"));
 				rv.setMtId(rs.getInt("mt_id"));
-			
+
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return rv;
-		
+
 	}
-	
-	
+
 	// 리뷰 수정
 	public static int updateReview(ReviewTO rv) {
-		int result  = -1;
-		String sql = "update review set rv_title = ?, rv_content = ?, rv_img = ?"
-				+ " where rv_numid = ?";
-		
-		try(Connection conn = DBUtil.getConnection()) {
-			
+		int result = -1;
+		String sql = "update review set rv_title = ?, rv_content = ?, rv_img = ?" + " where rv_numid = ? and rv_pwd = ?";
+
+		try (Connection conn = DBUtil.getConnection()) {
+
 			PreparedStatement psmt = conn.prepareStatement(sql);
-				psmt.setString(1, rv.getRvTitle());
-				psmt.setString(2, rv.getRvContent());
-				psmt.setString(3, rv.getRvImg());
-				psmt.setInt(4, rv.getRvNumid());
-				
-				result = psmt.executeUpdate();
-				
-		}catch(Exception e) {
+			psmt.setString(1, rv.getRvTitle());
+			psmt.setString(2, rv.getRvContent());
+			psmt.setString(3, rv.getRvImg());
+			psmt.setInt(4, rv.getRvNumid());
+			psmt.setString(5, rv.getRvPwd());
+			
+			result = psmt.executeUpdate();
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
 	// 리뷰 삭제
-	public static int deleteReview(int rvNumId) {
+	public static int deleteReview(int rvNumId, String rvPwd) {
 		int result = -1;
-		String sql = "delete from review where rv_numid = ?";
-		
-		try(Connection conn = DBUtil.getConnection()) {
-				
+		String sql = "delete from review where rv_numid = ? and rv_pwd = ?";
+
+		try (Connection conn = DBUtil.getConnection()) {
+
 			PreparedStatement psmt = conn.prepareStatement(sql);
 			psmt.setInt(1, rvNumId);
-			
+			psmt.setString(2, rvPwd);
+
 			result = psmt.executeUpdate();
-			
-		}catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
