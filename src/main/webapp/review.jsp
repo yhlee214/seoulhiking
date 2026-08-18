@@ -299,23 +299,27 @@ body {
             });
          });
 
+         // 삭제(휴지통) 버튼 클릭 이벤트
+         // 비밀번호를 prompt로 입력받아서 delete.do에 rvPwd로 같이 전송해야 함
+         // (ShDAO.deleteReview가 rv_pwd 일치 조건까지 확인하도록 되어있어서 비번 없이 보내면 항상 실패함)
          $(document).on('click', '.btn-delete', function() {
             var rvNumid = $(this).data('id');
+            var pwd = prompt('삭제하려면 비밀번호를 입력하세요:');
 
-            if (!confirm('정말 삭제하시겠습니까?')) {
-               return;
+            if (pwd === null) {
+               return; // 취소 누르면 그냥 종료
             }
 
             $.ajax({
                url : 'delete.do',
                type : 'POST',
-               data : { rvNumid : rvNumid },
+               data : { rvNumid : rvNumid, rvPwd : pwd },
                dataType : 'json',
                success : function(res) {
                   if (res.result == 1) {
                      location.reload();
                   } else {
-                     alert('삭제에 실패했습니다.');
+                     alert('비밀번호가 틀렸거나 삭제에 실패했습니다.');
                   }
                },
                error : function() {
