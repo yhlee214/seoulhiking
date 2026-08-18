@@ -3,6 +3,7 @@ package sh;
 public class MountainTO {
 	
 	int mtId;
+	String mtImg;
 	String mtName;
 	String mtNameEn;
 	String mtContent;
@@ -18,6 +19,14 @@ public class MountainTO {
 
 	public void setMtId(int mtId) {
 		this.mtId = mtId;
+	}
+	
+	public String getMtImg() {
+		return mtImg;
+	}
+
+	public void setMtImg(String mtImg) {
+		this.mtImg = mtImg;
 	}
 
 	public String getMtName() {

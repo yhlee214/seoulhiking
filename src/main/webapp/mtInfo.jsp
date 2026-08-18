@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,13 +78,25 @@
 	font-family: "Noto Sans", sans-serif;
 }
 
-/*아코디언 내 사진*/
+/*아코디언 내*/
 .mt-img {
 	width: 100%;
 	max-height: 500px;
 	object-fit: cover;
 	border-radius: 8px;
 	margin-bottom: 15px;
+}
+
+.trail-img {
+	width: 100%;
+	max-height: 500px;
+	object-fit: contain;
+	border-radius: 8px;
+	margin-top: 15px;
+}
+
+.accordion-body p {
+	font-size: 20px;
 }
 
 </style>
@@ -102,73 +115,30 @@
 
 		<!-- ============ accordion begin ============ -->
 		<div class="accordion shadow-lg rounded" id="myAccordion">
-			<div class="accordion-item">
-				<h2 class="accordion-header">
-					<button class="accordion-button" type="button"
-						data-bs-toggle="collapse" data-bs-target="#collapse1"
-						aria-expanded="true" aria-controls="collapse1">🚩 Bukhansan</button>
-				</h2>
-				<div id="collapse1" class="accordion-collapse collapse show">
-					<div class="accordion-body">
-						<img src="images/bukhansan.jpg" class="mt-img" alt="Bukhansan">
-						<strong>This is the first item's accordion body.</strong> It is
-						shown by default, until the collapse plugin adds the appropriate
-						classes that we use to style each element.
+			<c:forEach var="mt" items="${mtList}" varStatus="status">
+				<div class="accordion-item">
+					<h2 class="accordion-header">
+						<button class="accordion-button ${status.first ? '' : 'collapsed'}"
+							type="button" data-bs-toggle="collapse"
+							data-bs-target="#collapse${mt.mtId}"
+							aria-expanded="${status.first ? 'true' : 'false'}"
+							aria-controls="collapse${mt.mtId}">
+							🚩 ${mt.mtName}
+						</button>
+					</h2>
+					<div id="collapse${mt.mtId}"
+						class="accordion-collapse collapse ${status.first ? 'show' : ''}">
+						<!-- 안의 내용 -->
+						<div class="accordion-body">
+							<img src="images/${mt.mtImg}" class="mt-img" alt="${mt.mtName}">
+							<p><strong>🏔위치:</strong> ${mt.mtLocation}</p>
+							<p><strong>🏔높이:</strong> ${mt.mtHeight}m</p>
+							<p>${mt.mtContent}</p>
+							<img src="images/${mt.mtTrailImg}" class="trail-img" alt="${mt.mtName}S">
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="accordion-item">
-				<h2 class="accordion-header">
-					<button class="accordion-button collapsed" type="button"
-						data-bs-toggle="collapse" data-bs-target="#collapse2"
-						aria-expanded="false" aria-controls="collapse2">🚩 Gwanaksan</button>
-				</h2>
-				<div id="collapse2" class="accordion-collapse collapse">
-					<div class="accordion-body">
-						<img src="images/gwanaksan.jpg" class="mt-img" alt="Gwanaksan">
-						<strong>This is the second item's accordion body.</strong>
-					</div>
-				</div>
-			</div>
-			<div class="accordion-item">
-				<h2 class="accordion-header">
-					<button class="accordion-button collapsed" type="button"
-						data-bs-toggle="collapse" data-bs-target="#collapse3"
-						aria-expanded="false" aria-controls="collapse3">🚩 Bugaksan</button>
-				</h2>
-				<div id="collapse3" class="accordion-collapse collapse">
-					<div class="accordion-body">
-						<img src="images/bugaksan.jpg" class="mt-img" alt="Bugaksan">
-						<strong>This is the third item's accordion body.</strong>
-					</div>
-				</div>
-			</div>
-			<div class="accordion-item">
-				<h2 class="accordion-header">
-					<button class="accordion-button collapsed" type="button"
-						data-bs-toggle="collapse" data-bs-target="#collapse4"
-						aria-expanded="false" aria-controls="collapse4">🚩 Inwangsan</button>
-				</h2>
-				<div id="collapse4" class="accordion-collapse collapse">
-					<div class="accordion-body">
-						<img src="images/inwangsan.jpg" class="mt-img" alt="Inwangsan">
-						<strong>This is the fourth item's accordion body.</strong>
-					</div>
-				</div>
-			</div>
-			<div class="accordion-item">
-				<h2 class="accordion-header">
-					<button class="accordion-button collapsed" type="button"
-						data-bs-toggle="collapse" data-bs-target="#collapse5"
-						aria-expanded="false" aria-controls="collapse5">🚩 Namsan</button>
-				</h2>
-				<div id="collapse5" class="accordion-collapse collapse">
-					<div class="accordion-body">
-						<img src="images/namsan.jpg" class="mt-img" alt="Namsan">
-						<strong>This is the fourth item's accordion body.</strong>
-					</div>
-				</div>
-			</div>
+			</c:forEach>
 		</div>
 		<!-- ============ accordion end ============ -->
 	</div>
