@@ -17,8 +17,8 @@ public class ShController extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");  
-	
-		String page = "menu.jsp";
+		// UTF-8을 하는 이유는 인코딩 문제 
+		String page = "main.jsp";
 		String uri = req.getRequestURI();
 		String requestUri = uri.substring(uri.lastIndexOf("/"));
 
