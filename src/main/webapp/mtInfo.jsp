@@ -144,7 +144,7 @@
 							<img src="images/${mt.mtTrailImg}" class="trail-img"
 								alt="${mt.mtName}S">
 							<div class="review-btn-wrap">
-								<button type="button" class="btn btn-primary btn-lg">Write Review</button>
+								<button type="button" class="btn btn-primary btn-lg" onclick="location.href='review.do?mtId=${mt.mtId}'">Write Review</button>
 							</div>
 						</div>
 					</div>

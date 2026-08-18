@@ -78,7 +78,7 @@ public class ShController extends HttpServlet {
 		// ═══ View(JSP) 거치는 구간 ═══
 		
 		// 리뷰 목록 — 페이지 전체 (모달 마크업도 이 JSP 안에 포함)
-		case "/reviewlist.do" : {
+		case "/review.do" : {
 		    List<ReviewTO> list = ShDAO.getReviewList();
 		    req.setAttribute("reviewlist", list);
 
@@ -101,7 +101,7 @@ public class ShController extends HttpServlet {
 		}
 		
 		// 산 목록
-		case "/mtlist.do" : {
+		case "/mtInfo.do" : {
 			String lang = req.getParameter("lang");
 		    if (lang == null) {
 		        lang = "eng";
