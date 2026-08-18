@@ -82,6 +82,7 @@
 }
 
 </style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -89,11 +90,13 @@
 
 		<div class="main_title">
 			<p class="title-sub1">
-				<span class="highlight">KOREA MOUNTAIN TRAVLES</span>
+				<span class="highlight lang-ko" style="display:none;">서울 등산 여행</span>
+				<span class="highlight lang-en">SEOUL MOUNTAIN TRAVLES</span>
 			</p>
-			<p class="title-main1">Start Your</p>
+			<p class="title-main1 lang-ko" style="display:none;">시작해보세요!</p>
+			<p class="title-main1 lang-en">Start Your</p>
 			<img src="images/logo.png" alt="Seoul Hiking" class="title-main2">
-			<button type="button" class="btn btn-info btn-lg main-btn">KOR / ENG</button>
+			<button type="button" class="btn btn-info btn-lg main-btn" id="langBtn">ENG / KOR</button>
 		</div>
 
 		<!-- ============ Carousel begin ============ -->
@@ -138,5 +141,24 @@
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		let currentLang = 'eng'; 
+		
+		$('#langBtn').on('click', function(){
+			currentLang = (currentLang === 'kor') ? 'eng' : 'kor';
+			toggleText(currentLang);
+		});
+		
+		function toggleText(lang) {
+			if(lang === 'kor') {
+				$('.lang-ko').show();
+				$('.lang-en').hide();
+			} else {
+				$('.lang-ko').hide();
+				$('.lang-en').show();
+			}
+		}
+		
+	</script>
 </body>
 </html>
