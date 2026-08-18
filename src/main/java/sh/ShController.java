@@ -103,9 +103,12 @@ public class ShController extends HttpServlet {
 		// 산 목록
 		case "/mtlist.do" : {
 			String lang = req.getParameter("lang");
+		    if (lang == null) {
+		        lang = "eng";
+		    }
 			List<MountainTO> list = ShDAO.getMountainList(lang);
 			req.setAttribute("mtList", list);
-			page = "mtinfo.jsp";
+			page = "mtInfo.jsp";
 			break;
 		}
 	}
