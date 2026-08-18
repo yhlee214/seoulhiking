@@ -13,10 +13,10 @@ public class ShDAO {
 		List<MountainTO> mtList = new ArrayList<MountainTO>();
 		String sql = "";
 		if ("eng".equals(lang)) {
-			sql = "select mt_id, mt_name_en as mt_name, mt_content_en as mt_content, mt_location_en as mt_location,\r\n"
+			sql = "select mt_id, mt_img, mt_name_en as mt_name, mt_content_en as mt_content, mt_location_en as mt_location,\r\n"
 					+ "	mt_height, mt_trail_img from mountain";
 		} else {
-			sql = "select mt_id, mt_name, mt_content, mt_location, mt_height, mt_trail_img\r\n"
+			sql = "select mt_id, mt_img, mt_name, mt_content, mt_location, mt_height, mt_trail_img\r\n"
 					+ "	from mountain";
 		}
 
@@ -29,6 +29,7 @@ public class ShDAO {
 			while (rs.next()) {
 				MountainTO mt = new MountainTO();
 				mt.setMtId(rs.getInt("mt_id"));
+				mt.setMtImg(rs.getString("mt_img"));
 				mt.setMtName(rs.getString("mt_name"));
 				mt.setMtContent(rs.getString("mt_content"));
 				mt.setMtLocation(rs.getString("mt_location"));
