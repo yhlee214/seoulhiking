@@ -18,7 +18,7 @@ public class ShController extends HttpServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");  
 	
-		String page = "menu.jsp";
+		String page = "main.jsp";
 		String uri = req.getRequestURI();
 		String requestUri = uri.substring(uri.lastIndexOf("/"));
 
