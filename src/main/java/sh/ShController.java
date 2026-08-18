@@ -9,6 +9,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.Part;
+import java.io.File;
+import java.util.UUID;
 
 
 @WebServlet("*.do")
@@ -16,11 +20,9 @@ public class ShController extends HttpServlet {
 
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-		// ※ 한글 깨지면 여기에 req.setCharacterEncoding("UTF-8");
-		//    모달 저장은 POST로 나가므로 여기서 걸릴 확률 높음
-		
-		String page = "menu.jsp";
+		req.setCharacterEncoding("UTF-8");  
+	
+		String page = "main.jsp";
 		String uri = req.getRequestURI();
 		String requestUri = uri.substring(uri.lastIndexOf("/"));
 
@@ -42,6 +44,7 @@ public class ShController extends HttpServlet {
 			// makeReview는 rvNumid를 안 담음(등록엔 없는 값이라)
 			// update는 대상 글번호가 필수 → 모달의 hidden input에서 받아 세팅
 			rv.setRvNumid(Integer.parseInt(req.getParameter("rvNumid")));
+			rv.setRvPwd(req.getParameter("rvPwd"));
 			int result = ShDAO.updateReview(rv);
 			writeJson(resp, "{\"result\":" + result + "}");
 			return;
@@ -50,7 +53,8 @@ public class ShController extends HttpServlet {
 		// 삭제
 		case "/delete.do" : {
 			int rvId = Integer.parseInt(req.getParameter("rvNumid"));
-			int result = ShDAO.deleteReview(rvId);
+			String rvpw = req.getParameter("rvPwd");
+			int result = ShDAO.deleteReview(rvId, rvpw);
 			writeJson(resp, "{\"result\":" + result + "}");
 			return;
 		}
