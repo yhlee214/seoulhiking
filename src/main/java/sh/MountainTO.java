@@ -1,11 +1,17 @@
 package sh;
 
 public class MountainTO {
+	
 	int mtId;
+	String mtImg;
 	String mtName;
+	String mtNameEn;
+	String mtContent;
+	String mtContentEn;
 	String mtLocation;
+	String mtLocationEn;
 	int mtHeight;
-	String mtTrail;
+	String mtTrailImg;
 
 	public int getMtId() {
 		return mtId;
@@ -13,6 +19,14 @@ public class MountainTO {
 
 	public void setMtId(int mtId) {
 		this.mtId = mtId;
+	}
+	
+	public String getMtImg() {
+		return mtImg; 
+	}
+	
+	public void setMtImg(String mtImg) {
+		this.mtImg = mtImg;
 	}
 
 	public String getMtName() {
@@ -23,12 +37,44 @@ public class MountainTO {
 		this.mtName = mtName;
 	}
 
+	public String getMtNameEn() {
+		return mtNameEn;
+	}
+
+	public void setMtNameEn(String mtNameEn) {
+		this.mtNameEn = mtNameEn;
+	}
+
+	public String getMtContent() {
+		return mtContent;
+	}
+
+	public void setMtContent(String mtContent) {
+		this.mtContent = mtContent;
+	}
+
+	public String getMtContentEn() {
+		return mtContentEn;
+	}
+
+	public void setMtContentEn(String mtContentEn) {
+		this.mtContentEn = mtContentEn;
+	}
+
 	public String getMtLocation() {
 		return mtLocation;
 	}
 
 	public void setMtLocation(String mtLocation) {
 		this.mtLocation = mtLocation;
+	}
+
+	public String getMtLocationEn() {
+		return mtLocationEn;
+	}
+
+	public void setMtLocationEn(String mtLocationEn) {
+		this.mtLocationEn = mtLocationEn;
 	}
 
 	public int getMtHeight() {
@@ -39,12 +85,12 @@ public class MountainTO {
 		this.mtHeight = mtHeight;
 	}
 
-	public String getMtTrail() {
-		return mtTrail;
+	public String getMtTrailImg() {
+		return mtTrailImg;
 	}
 
-	public void setMtTrail(String mtTrail) {
-		this.mtTrail = mtTrail;
+	public void setMtTrailImg(String mtTrailImg) {
+		this.mtTrailImg = mtTrailImg;
 	}
-
+	
 }

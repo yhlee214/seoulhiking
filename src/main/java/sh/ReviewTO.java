@@ -10,6 +10,7 @@ public class ReviewTO {
 	String rvImg;
 	int mtId;
     String mtName;
+    String mtNameEn;
     
 	public int getRvNumid() {
 		return rvNumid;
@@ -58,7 +59,13 @@ public class ReviewTO {
 	}
 	public void setMtName(String mtName) {
 		this.mtName = mtName;
-	}	
+	}
+	public String getMtNameEn() {
+		return mtNameEn;
+	}
+	public void setMtNameEn(String mtNameEn) {
+		this.mtNameEn = mtNameEn;
+	}
     
 }
 
