@@ -138,15 +138,21 @@
 
 
 	</div>
-
+	
+	<div id="mtInfoWrap">
+		<jsp:include page="mtInfo.jsp" flush="false"/>
+	</div>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
-		let currentLang = 'eng'; 
+	$(document).ready(function() {
+		let currentLang = 'eng';
 		
 		$('#langBtn').on('click', function(){
 			currentLang = (currentLang === 'kor') ? 'eng' : 'kor';
 			toggleText(currentLang);
+			
+		$('#mtInfoWrap').load('mtInfo.do?lang=' + currentLang);
 		});
 		
 		function toggleText(lang) {
@@ -158,7 +164,7 @@
 				$('.lang-en').show();
 			}
 		}
-		
+	});	
 	</script>
 </body>
 </html>

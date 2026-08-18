@@ -81,9 +81,11 @@ public class ShController extends HttpServlet {
 		case "/review.do" : {
 		    List<ReviewTO> list = ShDAO.getReviewList();
 		    req.setAttribute("reviewlist", list);
-
+		    
+		    String lang = "eng";
+		    
 		    // 모달 안 산 선택 <select> 채우기용
-		    List<MountainTO> mtList = ShDAO.getMountainList(req.getParameter("lang"));
+		    List<MountainTO> mtList = ShDAO.getMountainList(lang);
 		    req.setAttribute("mtList", mtList);
 
 		    page = "review.jsp";
@@ -99,6 +101,18 @@ public class ShController extends HttpServlet {
 			page = "reviewTable.jsp";
 			break;
 		}
+		case "/main.do" : {
+			String lang = req.getParameter("lang");
+			if (lang == null) {
+				lang = "eng";
+			}
+			
+			List<MountainTO> list = ShDAO.getMountainList(lang);
+			req.setAttribute("mtList", list);
+			page ="main.jsp";
+			break;
+		}
+		
 		
 		// 산 목록
 		case "/mtInfo.do" : {
